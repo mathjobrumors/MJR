@@ -81,7 +81,8 @@ getHomeR = do
 -- Output page v of the listing of all threads
 
 getPageR :: Int -> Handler Html
-getPageR v = do
+getPageR v | v <= 0 = notFound
+           | otherwise = do            
 
     updateTimestamp -- rate limiting timestamp
 
@@ -91,21 +92,23 @@ getPageR v = do
 
     threads <- 
         if v == 1 then do
+
             nonSticky <- runDB $ selectList [ThreadSticky ==. False]
                 [ Desc ThreadTimestamp
                 , LimitTo (resultsPerPage - (length stickyList))
                 , OffsetBy 0 ] 
+
             stickyNewList <- runDB $ selectList [ThreadSticky ==. True]
                 [ Desc ThreadTimestamp ]
             
-            return ((fmap 
-                (\(Entity id content) -> (Entity id content {threadThreadTitle = Data.Text.concat [ pack "\128204 ", threadThreadTitle content ]})) stickyNewList) ++ nonSticky)
-
+            return ((changeTitle <$> stickyNewList) ++ nonSticky)
+                
         else do
+            
             runDB $ selectList [ThreadSticky ==. False]
                 [ Desc ThreadTimestamp
                 , LimitTo resultsPerPage
-                , OffsetBy $ (v - 1) * resultsPerPage ]
+                , OffsetBy $ (v - 1) * resultsPerPage - (length stickyList) ]
 
     request <- getRequest -- used by main.html for CSRF
 
@@ -162,6 +165,11 @@ getPageR v = do
             unMaybe :: Maybe Text -> Text
             unMaybe (Just x) = x
             unMaybe Nothing = ""
+
+            changeTitle (Entity id content) = 
+                Entity id content { 
+                    threadThreadTitle = Data.Text.concat [pack "\128204", threadThreadTitle content]
+                }
 
             defaultLinkAlt thread res currentTime adminmode = let
                 threadid = fromIntegral (threadThreadId thread)

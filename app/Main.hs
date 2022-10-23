@@ -136,6 +136,8 @@ server sock = do
     shared <- newTVarIO (Data.Set.fromList [])
     activeConnections <- newTVarIO (0 :: Int)
     ratelimittvar <- newTVarIO M.empty
+    shutdownMVar <- newEmptyTMVarIO
+    savedtokens <- newEmptyTMVarIO
 
     randKey <- snd <$> C.randomKey 
 
@@ -153,8 +155,6 @@ server sock = do
 
     v <- setupDB stickylist timenow pool shared
 
-    shutdownMVar <- newEmptyTMVarIO
-
     app <- toWaiApp MathJobsApp { persistConfig        = conf,
                                   connPool             = pool,
                                   getStatic            = staticdir,
@@ -171,6 +171,8 @@ server sock = do
 
     installHandler sigINT (CatchInfo (ctrlC pool shared shutdownMVar sock)) Nothing
 
+    -- | TODO: Periodically save tokens when connections drop to zero 
+
     race_ 
         (atomically $ do takeTMVar shutdownMVar)
         (concurrently    
@@ -179,7 +181,8 @@ server sock = do
                 sock ((rateLimitApplication randomnonce ratelimittvar) app))
              (liftIO $ runSettings (setPort 80 defaultSettings) redirectApp))
 
-    saveTokensRemoveIp pool shared
+    saveTokens pool shared
+    purgeIps pool
 
     where
 

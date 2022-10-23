@@ -39,8 +39,8 @@ import Control.Concurrent.STM
 import System.IO
 import Yesod
 
-saveTokensRemoveIp pool shared = do
-
+saveTokens pool shared = do
+    
     flip runSqlPersistMPool pool $ do 
 
         -- Save new authorizations
@@ -60,15 +60,6 @@ saveTokensRemoveIp pool shared = do
                   $ Data.Set.toList
                   $ Data.Set.difference (Data.Set.fromList oldauth') tvar
 
-        -- Purge encrypted IP 
-
-        iplist <- selectList [] []
-        sequence_ $ 
-            fmap deleteBy $ 
-            fmap (\(Entity id content) -> 
-                    UniqueThreadPostIp 
-                        (ipLogEncryptedThreadId content) (ipLogEncryptedPostId content)) iplist 
-
         return ()
 
     print "tokens saved"
@@ -82,3 +73,16 @@ saveTokensRemoveIp pool shared = do
                 Nothing             -> do 
                     insert_ (AuthorizationDB id time)
                     return ()
+
+-- | Purge encrypted IPs
+
+purgeIps pool = do
+    
+    flip runSqlPersistMPool pool $ do 
+
+        iplist <- selectList [] []
+        sequence_ $ 
+            fmap deleteBy $ 
+            fmap (\(Entity id content) -> 
+                    UniqueThreadPostIp 
+                        (ipLogEncryptedThreadId content) (ipLogEncryptedPostId content)) iplist 

@@ -37,7 +37,6 @@ import Control.Monad
 import Control.Concurrent.STM.TVar
 import Control.Concurrent.STM
 
-
 getSticky (x:xs) = do
     thread <- getBy $ UniqueThreadId x
     case thread of

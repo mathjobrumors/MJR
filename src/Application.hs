@@ -95,7 +95,12 @@ getPageR v = do
                 [ Desc ThreadTimestamp
                 , LimitTo (resultsPerPage - (length stickyList))
                 , OffsetBy 0 ] 
-            return (stickyList ++ nonSticky)
+            stickyNewList <- runDB $ selectList [ThreadSticky ==. True]
+                [ Desc ThreadTimestamp ]
+            
+            return ((fmap 
+                (\(Entity id content) -> (Entity id content {threadThreadTitle = Data.Text.concat [ pack "\128204 ", threadThreadTitle content ]})) stickyNewList) ++ nonSticky)
+
         else do
             runDB $ selectList [ThreadSticky ==. False]
                 [ Desc ThreadTimestamp

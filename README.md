@@ -5,13 +5,15 @@
 2. Install GHC: `stack setup`
 3. Build libraries: `stack build`
 
-## Development
+## Testing
 
-Start a development server with:
+Run: 
 
 ```
-stack build --exec test-minimal
+stack run
 ```
+
+Make sure that you have permissions to bind to port 80 and 443. 
 
 ## Documentation
 

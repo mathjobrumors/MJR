@@ -1,0 +1,59 @@
+name:    mathjobrumors
+version: "1.8.9"
+
+dependencies:
+- base
+- yesod-core
+- persistent-sqlite
+- text
+- yesod
+- time
+- string-random
+- cookie
+- warp-tls
+- warp
+- shakespeare
+- bytestring
+- persistent
+- blaze-html
+- wai
+- http-types
+- parsec
+- containers
+- cmark
+- blaze-markup
+- yesod-static
+- random
+- binary
+- cryptohash-sha256
+- hashable
+- file-embed
+- network-uri
+- texmath
+- xml
+- clientsession
+- attoparsec
+- sort
+- mtl
+- stm
+- unix
+- async
+- network
+
+# The library contains all of our application code. The executable
+# defined below is just a thin wrapper.
+library:
+  source-dirs: src
+
+# Runnable executable for our application
+executables:
+ mathjobrumors:
+    main: Main.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -O2
+    - -with-rtsopts=-N
+    dependencies:
+    - mathjobrumors

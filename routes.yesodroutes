@@ -1,0 +1,29 @@
+/                          HomeR                       GET
+/captcha/#Text             CaptchaR                    GET
+/page/#Int                 PageR                       GET
+/thread/#Int/page/#Int     ThreadR                     GET
+/thread/#Int/last          ThreadLastR                 GET
+/thread/#Int/lastuserpost  ThreadLastUserR             GET
+/post/#Int	       	   PostR 		       POST
+/topic                     TopicR                      POST
+/thread/#Int/vup/#Int      VUpR                        POST 
+/thread/#Int/vdown/#Int    VDownR                      POST 
+/thread/#Int/report/#Int   ReportR                     POST 
+/static                    StaticR EmbeddedStatic getStatic
+/favicon.ico               IconR                       GET
+/robots.txt		   RobotsR         	       GET
+/allowed.txt               AllowedR                    GET
+
+/spam/#Int                 SpamListR                   GET
+
+/admin/#Text/getauth       GetAuthR                    GET
+/adminlistreport           ListReportR                 GET
+/admin/#Int/delete_thread  DeleteThreadR               DELETE
+/admin/#Int/spam_thread    SpamThreadR                 PUT
+/admin/#Int/spam/#Int/post SpamPostR                   PUT
+/admin/#Int/delete/#Int/post DeletePostR               DELETE
+/admin/#Int/letitgo/#Int   LetItGoR                    PUT
+
+/admin/#Int/inspect        InspectR                    GET
+/admin/#Int/block          BlockR                      POST
+/admin/#Int/post/#Int/sage SageR                       POST

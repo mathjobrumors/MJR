@@ -1,0 +1,87 @@
+<div id="header" role="banner" style="width:100%">
+    <div id="hwrapper" class="iefix" style="width:100%">
+        <a id="sitelogo" href="/" style="padding-left:20px">#{toHtml $ pack "Math Job Rumors"}
+
+<br>
+<br>
+
+
+<div id="main" style="height: auto !important; width:100%" >
+
+    <div id="rfloat">
+
+        $if adminmode
+            Connections : #{numconnections}
+            <br>
+        
+        <table id="latest">
+            <thead>
+            <tr>
+                <th style="position:fixed;width:100%;">
+                    Title
+
+            <tbody>
+                <tr class="alt">
+                    <td style="width:100%">
+                        <div style="min-height:10px">
+
+            $forall Entity id thread <- threads
+                <tr class="alt">
+                    <td style="width:100%">
+                        ^{defaultLink thread}  
+                          
+    <div id="discussions">
+
+        <h1>#{curThreadTitle}
+
+
+        <ol id="thread" class="list:post" >
+
+            $forall (Entity id post, i) <- iteratedposts
+                <li class="#{altClass i}">
+                    ^{postEntryCustom postconfig userconfig v post}
+
+            <li class="#{altClass (1 + length iteratedposts)}" id="trebuchet" style="display:none">
+                ^{postEntryCustom defaultPreviewPost userconfig v (postPreview (currenttime userconfig) (val userconfig))}
+    
+        <div class="nav">     
+            ^{navigationBar numpages 5 (ThreadR postid) page}
+
+        <div id="warningmsg">
+            <strong>
+                Your screen is so tiny that we decided to disable the captcha and posting feature
+            
+        <form name="sform" id="sform" method=post action=@{PostR v} enctype="application/x-www-form-urlencoded" target="dummyframe"> 
+            <input type="hidden" name="#{defaultCsrfParamName}" id="token" value="#{unMaybe $ reqToken request}" form="sform">                     
+            <div id="msgarea">
+                <textarea id="field" name="msg" rows="8" cols="50" form="sform" style="width:100%; cursor: default; padding-left: 4px" maxlength=8192>
+                <label>
+                $if persistent
+                    
+                        <input type="checkbox" id="checkbox-persistent" name="persistent" value="True" form="sform" checked>
+                        Store settings & IDs (locally, encrypted)
+                $else 
+                    
+                        <input type="checkbox" id="checkbox-persistent" name="persistent" value="True" form="sform">
+                        Store settings & IDs (locally, encrypted)
+                <br>
+                $if perThread
+                    
+                        <input type="checkbox" id="checkbox-perthread" name="perthread" value="True" form="sform" checked>
+                        New ID for each thread
+                $else
+                    
+                        <input type="checkbox" id="checkbox-perthread" name="perthread" value="True" form="sform">
+                        New ID for each thread. 
+                <br>
+                <strong>
+                    Click the button below to post
+                <br>  
+            <center>  
+                <input name="img" id="img" type="image" src="@{captchaurl}" form="sform" loading="eager" width="#{fst captchaFrame}" height="#{snd captchaFrame}"> 
+        <br>
+
+        <div id="formatting" class="li:post">
+            <code>
+                <strong>Formatting guidelines:</strong> <a href="https://commonmark.org/help/">Commonmark</a> with no images and html allowed. $ and $$ for LaTeX. Input previewed in last post of thread. For a link to be allowed it must include the http(s) tag and come from the list of <a href=@{AllowedR}>allowed</a> domains.           
+        <br>

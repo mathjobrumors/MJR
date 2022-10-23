@@ -1,0 +1,27 @@
+<div id="header" role="banner" style="width:100%">
+    <div id="hwrapper" class="iefix" style="width:100%">
+        <a id="sitelogo" href="/" style="padding-left:20px">#{toHtml $ pack "Math Job Rumors"}
+
+<br>
+<br>
+
+<div id="main" style="height: auto !important; width:100%" >
+
+    <div id="discussions">
+
+        <h1>Last week's spam
+
+        <ol id="thread" class="list:post" >
+
+            $forall (Entity id post, i) <- iteratedposts
+                $if mod i 2 == 0 
+                    <li class="alt">
+                        ^{postEntrySpam post currentTime}
+                $else
+                    <li>
+                        ^{postEntrySpam post currentTime}
+        <br>
+        <br>
+
+        <div class="nav">   
+            ^{navigationBar (SpamList.lastPage numpost) 5 spamRoute page}   

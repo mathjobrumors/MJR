@@ -1,0 +1,141 @@
+<div id="header" role="banner" style="width:100%">
+    <div id="hwrapper" class="iefix" style="width:100%">
+        <a id="sitelogo" href="/" style="padding-left:20px">#{toHtml $ pack "Math Job Rumors"}
+
+<br>
+<br>
+
+
+<div id="main" style="height: auto !important;width:100%">
+
+    <div id="rfloat">
+         
+        $if adminmode
+            Connections : #{numconnections}
+            <br>
+
+    <div id="discussions">  
+
+        <div class="reallytiny">
+
+            <table id="latest">
+                <thead>
+                <tr>
+                    <th>
+                        <div class="full-text">
+                            Title
+                        <div class="short-text">
+                            Title
+                    <th style="text-align: center">
+                        <div class="full-text">
+                            Posts
+                        <div class="short-text">
+                            P
+                    <th style="text-align: center">
+                        <div class="full-text">
+                            Views
+                        <div class="short-text">
+                            Vw
+                    <th style="text-align: center">
+                        <div class="full-text">
+                            Votes
+                        <div class="short-text">
+                            V.
+                    <th style="text-align: center">
+                        <div class="full-text">
+                            Freshness
+                        <div class="short-text">
+                            D.
+
+                    $if adminmode
+                        <th style="text-align: center">Admin</th>
+                        <th style="text-align: center">Admin</th>
+
+                <tbody>
+
+                $forall (Entity id thread, k) <- iterthreads
+                    <tr class="#{altClass k}">
+                        ^{defaultLinkAlt thread resultsPerThreadPage currentTime adminmode}
+                
+        
+                <tr class="#{altClass (1 + length iterthreads)}"> 
+                    <td>
+                        <a href=@{SpamListR 1}>
+                            Last week's spam 
+                    <td>
+                    <td>
+                    <td>
+                    <td>
+        
+        <div class="alternative">
+            <table id="latest">
+                <thead>
+                <tr>
+                <th>
+                    Title
+            
+                <tbody>
+
+                    $forall (Entity id thread, k) <- iterthreads
+                        <tr class="#{altClass k}">
+                            <td style="width:100%">
+                                ^{defaultLink thread}                         
+                            
+        <div class="nav">
+            ^{navigationBar maxThreadsPages 5 PageR v}
+
+        <div id="warningmsg">
+            <strong>
+                Your screen is so tiny that we decided to disable the Captcha and posting feature
+        
+        <div id="previewbox" style="display:none">
+            <h2 id="titlearea">
+                <div style="opacity:0.0">
+                    N
+            <br>
+
+            ^{postEntryCustom defaultPreviewPost userconfig v (postPreview (currenttime userconfig) (val userconfig))}
+    
+        <form name="sform" id="sform" method=post action=@{TopicR} enctype="application/x-www-form-urlencoded" target="dummyframe"> 
+            <input type="hidden" name="#{defaultCsrfParamName}" id="token" value="#{unMaybe $ reqToken request}" form="sform"> 
+            <div id="msgarea">
+                <b>
+                    Topic:
+                <br>
+                <input id="topicfield" class="textinput" name="topic" size="50" maxlength="80" tabindex="1" form="sform" style="width:100%;cursor: default; padding-left: 4px">
+                <br>
+                <b>
+                    Message:
+                <textarea id="msgfield" name="msg" rows="8" cols="50" tabindex="3" form="sform" maxlength=8192 style="width:100%;cursor: default; padding-left: 4px">
+                <label>
+                    $if persistent
+                        
+                            <input type="checkbox" id="checkbox-persistent" name="persistent" value="True" form="sform" checked>
+                            Store settings & IDs (locally, encrypted)
+                    $else 
+                        
+                            <input type="checkbox" id="checkbox-persistent" name="persistent" value="True" form="sform">
+                            Store settings & IDs (locally, encrypted)
+        
+                    <br>
+                    $if perThread
+                        
+                            <input type="checkbox" id="checkbox-perthread" name="perthread" value="True" form="sform" checked>
+                            New ID for each thread
+                    $else
+                        
+                            <input type="checkbox" id="checkbox-perthread" name="perthread" value="True" form="sform">
+                            New ID for each thread.     
+                <br>
+                <strong>
+                    Click the button below to post
+                <br>   
+            <center>
+                <input name="img" id="img" type="image" src="@{captchaurl}" form="sform" loading="eager" width="#{fst captchaFrame}" height="#{snd captchaFrame}"> 
+    
+        <br>
+
+        <div id="formatting" class="li:post">
+            <code>
+                <strong>Formatting guidelines:</strong> <a href="https://commonmark.org/help/">Commonmark</a> with no images and html allowed. $ and $$ for LaTeX. Input previewed in last post of thread. For a link to be allowed it must include the http(s) tag and come from the list of <a href=@{AllowedR}>allowed</a> domains.  
+        <br>

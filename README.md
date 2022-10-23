@@ -13,7 +13,30 @@ Run:
 stack run
 ```
 
-Make sure that you have permissions to bind to port 80 and 443. 
+Make sure that you have permissions to bind to port 80 and 443.
+
+Alternatively change the port bindings in the source code or
+execute as root:
+
+```
+stack install
+sudo ~/.local/bin/mathjobrumors +RTS -N2
+```
+
+Passing the argument +RTS -N2 tells the executable
+to use two cores. Then navigate to 
+
+```
+https://127.0.0.1 
+```
+
+using your browser. If you open instead
+
+```
+http://127.0.0.1
+```
+
+you will be redirected to mathjobrumors.com.
 
 ## Documentation
 
